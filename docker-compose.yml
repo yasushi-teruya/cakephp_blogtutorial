@@ -1,0 +1,43 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 13306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: my_app
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci --skip-character-set-client-handshake
+    volumes:
+      - ./mysql/db:/var/lib/mysql/
+    networks:
+      internal:
+        aliases:
+          - database-local
+
+  php:
+    build:
+      context: ./apache
+    depends_on:
+      - mysql
+    volumes:
+      - ./html:/var/www/html
+    ports:
+      - 8080:80
+      - 1443:443
+    links:
+      - mysql
+    networks:
+      internal:
+
+  php-composer:
+    build:
+      context: ./composer
+    volumes:
+      - ./html:/app
+    command: composer install --ignore-platform-reqs --no-scripts
+
+networks:
+  internal:

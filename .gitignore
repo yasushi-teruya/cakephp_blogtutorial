@@ -1,0 +1,5 @@
+mysql/db/*
+!mysql/db/.keep
+
+html/*
+!html/.keep
