@@ -3,3 +3,5 @@ mysql/db/*
 
 html/*
 !html/.keep
+
+web/*
